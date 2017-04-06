@@ -1,6 +1,8 @@
 package com.trippin.entities;
 import com.trippin.utilities.PasswordStorage;
 import javax.persistence.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "users")
@@ -12,10 +14,23 @@ public class User {
 
     @Column(nullable = false, unique = true)
     private String email;
-    @Column(nullable = false)
+
+    @Column(nullable = false, unique = true)
     private String username;
+
     @Column(nullable = false)
     private String password;
+
+    @Column
+    public String hometown;
+    @Column
+    public String homestate;
+    @Column
+    public String country;
+    @Column
+    public String bio;
+    @Column
+    public ArrayList<User> friends;
 
     public User() {
     }
@@ -52,6 +67,10 @@ public class User {
 
     public boolean verifyPassword(String password) throws PasswordStorage.InvalidHashException, PasswordStorage.CannotPerformOperationException {
         return PasswordStorage.verifyPassword(password, this.getPasswordHash());
+    }
+
+    public String getPassword() {
+        return password;
     }
 }
 
