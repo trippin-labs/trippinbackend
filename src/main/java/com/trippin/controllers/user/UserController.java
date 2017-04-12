@@ -45,7 +45,7 @@ public class UserController {
     public HashMap<String, Object> registerUser(@RequestBody RootParser<User> parmUser, HttpServletResponse response) throws Exception {
         User user = parmUser.getData().getEntity();
         User dbUser = users.findFirstByEmail(user.getEmail());
-        if (dbUser != null ) {
+        if (dbUser != null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else
             try {
@@ -68,13 +68,16 @@ public class UserController {
         User user = tempUser.getData().getEntity();
         User dbUser = users.findFirstByUsername(user.getUsername());
         HashMap<String, Object> ret;
+        if (dbUser == null) {
+            response.sendError(401, "Invalid credentials.");
+        }
         if (!dbUser.verifyPassword(user.getPassword())) {
             response.sendError(401, "Invalid Credentials.");
             ret = new HashMap<>();
         } else {
             response.setStatus(HttpServletResponse.SC_OK);
             ret = rootSerializer.serializeOne(
-                    "/users/" + dbUser.getId(),
+                    "/login/" + dbUser.getId(),
                     dbUser, userSerializer);
         }
         return ret;

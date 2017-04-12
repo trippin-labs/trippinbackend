@@ -28,7 +28,7 @@ public class User implements HasId {
     @Column(nullable = false)
     private String passwordHash;
 
-//    @Transient
+    @Transient
     private String password;
 
     public User() {
