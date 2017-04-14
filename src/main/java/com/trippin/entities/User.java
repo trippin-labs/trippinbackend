@@ -5,8 +5,6 @@ import com.trippin.utilities.PasswordStorage;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 @Entity
 @Table (name = "users")

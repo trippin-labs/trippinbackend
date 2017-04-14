@@ -1,30 +1,35 @@
 package com.trippin.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "userProfiles")
-public class UserProfile {
+public class UserProfile implements HasId {
+    private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     String id;
 
+    @Column
     private String username;
 
+    @Column
     public String hometown;
 
+    @Column
     public String homestate;
 
+    @Column
     public String country;
 
+    @Column
     public String bio;
 
-    public UserProfile(String id, String username, String hometown, String homestate, String country, String bio) {
-        this.id = id;
+    public UserProfile(String username, String hometown, String homestate, String country, String bio) {
         this.username = username;
         this.hometown = hometown;
         this.homestate = homestate;
@@ -34,7 +39,7 @@ public class UserProfile {
 
     public UserProfile() {
     }
-
+    @Override
     public String getId() {
         return id;
     }

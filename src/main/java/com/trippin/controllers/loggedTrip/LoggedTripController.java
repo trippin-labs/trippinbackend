@@ -2,16 +2,19 @@ package com.trippin.controllers.loggedTrip;
 
 
 import com.trippin.entities.LoggedTrip;
+import com.trippin.entities.User;
 import com.trippin.parsers.RootParser;
 import com.trippin.serializers.LoggedTripSerializer;
 import com.trippin.serializers.RootSerializer;
 import com.trippin.services.LoggedTripRepository;
+import com.trippin.utilities.PasswordStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 
 @RestController
@@ -26,6 +29,17 @@ public class LoggedTripController {
     public LoggedTripController() {
         rootSerializer = new RootSerializer();
         LoggedTripSerializer = new LoggedTripSerializer();
+    }
+
+    @PostConstruct
+    public void init() throws PasswordStorage.CannotPerformOperationException {
+        if (loggedtrips.count() == 0) {
+            LoggedTrip loggedTrip = new LoggedTrip();
+            loggedTrip.setTripName("Harold's hairy adventure.");
+            loggedTrip.setLocation("Bermuda");
+            loggedTrip.setDate("02-03-2016");
+            loggedtrips.save(loggedTrip);
+        }
     }
 
     //log a trip

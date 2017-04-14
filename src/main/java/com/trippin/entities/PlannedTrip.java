@@ -13,5 +13,5 @@ public class PlannedTrip {
     int id;
 
     @Column
-    String cover;
+    String tripName;
 }

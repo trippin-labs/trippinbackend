@@ -16,7 +16,10 @@ public class LoggedTripSerializer extends JsonDataSerializer {
         Map<String, Object> result = new HashMap<>();
         LoggedTrip loggedTrip = (LoggedTrip) entity;
 
-        result.put("cover", loggedTrip.getCover());
+        result.put("tripName", loggedTrip.getTripName());
+        result.put("location", loggedTrip.getLocation());
+        result.put("date", loggedTrip.getDate());
+        result.put("details", loggedTrip.getDetails());
 
         return result;
     }
