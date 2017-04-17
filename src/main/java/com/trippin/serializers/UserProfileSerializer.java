@@ -1,13 +1,11 @@
 package com.trippin.serializers;
 
-
 import com.trippin.entities.HasId;
 import com.trippin.entities.UserProfile;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserProfileSerializer {
+public class UserProfileSerializer extends JsonDataSerializer {
 
     public String getType() {
         return "userProfiles";
@@ -17,12 +15,11 @@ public class UserProfileSerializer {
         Map<String, Object> result = new HashMap<>();
         UserProfile userProfile = (UserProfile) entity;
 
-        result.put("userName", userProfile.getUsername());
+        result.put("username", userProfile.getUsername());
         result.put("hometown", userProfile.getHometown());
         result.put("homestate", userProfile.getHomestate());
         result.put("country", userProfile.getCountry());
         result.put("bio", userProfile.getBio());
-
 
         return result;
     }

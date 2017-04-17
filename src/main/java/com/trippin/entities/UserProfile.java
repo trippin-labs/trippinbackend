@@ -29,6 +29,8 @@ public class UserProfile implements HasId {
     @Column
     public String bio;
 
+
+
     public UserProfile(String username, String hometown, String homestate, String country, String bio) {
         this.username = username;
         this.hometown = hometown;
@@ -39,6 +41,7 @@ public class UserProfile implements HasId {
 
     public UserProfile() {
     }
+
     @Override
     public String getId() {
         return id;

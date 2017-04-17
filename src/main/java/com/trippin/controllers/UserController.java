@@ -1,4 +1,4 @@
-package com.trippin.controllers.user;
+package com.trippin.controllers;
 
 import com.trippin.entities.User;
 import com.trippin.parsers.RootParser;
@@ -7,6 +7,9 @@ import com.trippin.serializers.RootSerializer;
 import com.trippin.services.UserRepository;
 import com.trippin.utilities.PasswordStorage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
@@ -16,6 +19,9 @@ import java.util.HashMap;
 @RestController
 @CrossOrigin(origins = "*")
 public class UserController {
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     UserRepository users;
@@ -35,7 +41,6 @@ public class UserController {
             user.setEmail("johndoe@gmail.com");
             user.setUsername("johndoe123");
             user.setPassword("password123");
-            user.setPasswordHash();
             users.save(user);
         }
     }
@@ -49,7 +54,7 @@ public class UserController {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else
             try {
-                user.setPasswordHash();
+                user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
                 users.save(user);
                 response.setStatus(HttpServletResponse.SC_OK);
             } catch (Exception e) {
@@ -61,27 +66,24 @@ public class UserController {
                 userSerializer);
     }
 
-
     //login
-    @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public HashMap<String, Object> loginUser(@RequestBody RootParser<User> tempUser, HttpServletResponse response) throws Exception {
-        User user = tempUser.getData().getEntity();
-        User dbUser = users.findFirstByUsername(user.getUsername());
-        HashMap<String, Object> ret;
-        if (dbUser == null) {
-            response.sendError(401, "Invalid credentials.");
-        }
-        if (!dbUser.verifyPassword(user.getPassword())) {
-            response.sendError(401, "Invalid Credentials.");
-            ret = new HashMap<>();
-        } else {
-            response.setStatus(HttpServletResponse.SC_OK);
-            ret = rootSerializer.serializeOne(
-                    "/login/" + dbUser.getId(),
-                    dbUser, userSerializer);
-        }
-        return ret;
+    @RequestMapping(path = "/users/current", method = RequestMethod.GET)
+    public HashMap<String, Object> currentUser() {
+        Authentication u = SecurityContextHolder.getContext().getAuthentication();
+        User user = users.findFirstByUsername(u.getName());
+
+        return rootSerializer.serializeOne(
+                "/users/" + user.getId(),
+                user,
+                userSerializer);
     }
+
+    //logout
+//    @RequestMapping(path = "/users/logout", method = RequestMethod.POST)
+//    public HashMap<String, Object> logout(@RequestBody RootParser<User> parmUser, HttpServletResponse response) {
+//
+//    }
+
 
 }
 

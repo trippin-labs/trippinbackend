@@ -1,6 +1,4 @@
-package com.trippin.controllers.userProfile;
-
-
+package com.trippin.controllers;
 
 
 import com.trippin.entities.UserProfile;
@@ -11,6 +9,8 @@ import com.trippin.serializers.UserProfileSerializer;
 import com.trippin.services.UserProfileRepository;
 import com.trippin.utilities.PasswordStorage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
@@ -41,7 +41,7 @@ public class UserProfileController {
 
             userProfile.setUsername("sampleuser123");
             userProfile.setHometown("hometown");
-            userProfile.setHomestate("homstate");
+            userProfile.setHomestate("homestate");
             userProfile.setCountry("country");
             userProfile.setBio("bio bio bio");
 
@@ -51,12 +51,25 @@ public class UserProfileController {
 
     //create Profile
     @RequestMapping(path = "/userProfiles", method = RequestMethod.POST)
-    public HashMap<String, Object> createProfile(@RequestBody RootParser<UserProfile> userprofile, HttpServletResponse response) throws Exception {
-        UserProfile dbUserProfile = userprofile.getData().getEntity();
-
+    public HashMap<String, Object> createProfile(@RequestBody RootParser<UserProfile> parser, HttpServletResponse response) throws Exception {
+        UserProfile userProfile1 = parser.getData().getEntity();
+        Authentication u = SecurityContextHolder.getContext().getAuthentication();
+        UserProfile userProfile = userProfiles.findFirstByUsername(u.getName());
+        userProfiles.save(userProfile);
         return rootSerializer.serializeOne(
-                "/userProfiles/" + userprofile.get
-                userProfiles,
+                "/userProfiles" + userProfile1.getId(),
+                userProfile,
                 userProfileSerializer);
-}
+    }
+
+    //get Profile
+    @RequestMapping(path = "/userProfiles", method = RequestMethod.GET)
+    public HashMap<String, Object> currentUser() {
+        Authentication u = SecurityContextHolder.getContext().getAuthentication();
+        UserProfile userProfile = userProfiles.findFirstByUsername(u.getName());
+        return rootSerializer.serializeOne(
+                "/userProfiles/" + userProfile.getId(),
+                userProfile,
+                userProfileSerializer);
+    }
 }

@@ -1,4 +1,4 @@
-package com.trippin.controllers.plannedTrip;
+package com.trippin.controllers;
 
 /**
  * Created by MatthewRigsby on 4/10/17.
