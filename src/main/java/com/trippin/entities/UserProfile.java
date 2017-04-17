@@ -1,11 +1,12 @@
 package com.trippin.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "userProfiles")
+@Table(name = "photos")
 public class UserProfile implements HasId {
     private static final long serialVersionUID = 1L;
 
@@ -29,16 +30,36 @@ public class UserProfile implements HasId {
     @Column
     public String bio;
 
-    public UserProfile(String username, String hometown, String homestate, String country, String bio) {
+    @Column
+    @JsonProperty("photo'url")
+    String photoUrl;
+
+
+
+    public UserProfile(String username, String hometown, String homestate, String country, String bio, String photoUrl) {
         this.username = username;
         this.hometown = hometown;
         this.homestate = homestate;
         this.country = country;
         this.bio = bio;
+        this.photoUrl = photoUrl;
     }
 
     public UserProfile() {
     }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
     @Override
     public String getId() {
         return id;

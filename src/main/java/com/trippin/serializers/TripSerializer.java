@@ -4,22 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.trippin.entities.HasId;
-import com.trippin.entities.LoggedTrip;
+import com.trippin.entities.Trip;
 
-public class LoggedTripSerializer extends JsonDataSerializer {
+public class TripSerializer extends JsonDataSerializer {
 
     public String getType() {
-        return "loggedtrips";
+        return "trips";
     }
 
     public Map<String, Object> getAttributes(HasId entity) {
         Map<String, Object> result = new HashMap<>();
-        LoggedTrip loggedTrip = (LoggedTrip) entity;
+        Trip loggedTrip = (Trip) entity;
 
-        result.put("tripName", loggedTrip.getTripName());
+        result.put("trip-name", loggedTrip.getTripName());
         result.put("location", loggedTrip.getLocation());
-        result.put("date", loggedTrip.getDate());
-        result.put("details", loggedTrip.getDetails());
 
         return result;
     }

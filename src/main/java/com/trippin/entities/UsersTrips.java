@@ -1,12 +1,13 @@
 package com.trippin.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-public class UsersLoggedTrips {
+public class UsersTrips {
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -17,9 +18,10 @@ public class UsersLoggedTrips {
     private User user;
 
     @ManyToOne
-    private LoggedTrip loggedTrip;
+    @JsonProperty("logged-trip")
+    private Trip trip;
 
-    public UsersLoggedTrips() {
+    public UsersTrips() {
     }
 
     public String getId() {
@@ -38,11 +40,11 @@ public class UsersLoggedTrips {
         this.user = user;
     }
 
-    public LoggedTrip getLoggedTrip() {
-        return loggedTrip;
+    public Trip getLoggedTrip() {
+        return trip;
     }
 
-    public void setLoggedTrip(LoggedTrip loggedTrip) {
-        this.loggedTrip = loggedTrip;
+    public void setLoggedTrip(Trip loggedTrip) {
+        this.trip = loggedTrip;
     }
 }
