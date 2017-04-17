@@ -47,7 +47,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       // Adds login route
       .addFilterBefore(new JWTLoginFilter("/login", authenticationManager()),
               UsernamePasswordAuthenticationFilter.class)
-      .cors().and()
       // Checks for Authorization token JWT
       .addFilterBefore(new JWTAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
   }
