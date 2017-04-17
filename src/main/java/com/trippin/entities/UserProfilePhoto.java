@@ -3,8 +3,10 @@ package com.trippin.entities;
 import com.trippin.entities.HasId;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "profile_photos")
 public class UserProfilePhoto implements HasId {
     private static final long serialVersionUID = 1L;
 

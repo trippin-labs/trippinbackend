@@ -66,30 +66,30 @@ public class UserProfileController {
     }
 
     //create Profile
-    @RequestMapping(path = "/userProfiles", method = RequestMethod.POST)
+    @RequestMapping(path = "/user-profiles", method = RequestMethod.POST)
     public HashMap<String, Object> createProfile(@RequestBody RootParser<UserProfile> parser, HttpServletResponse response) throws Exception {
         UserProfile userProfile1 = parser.getData().getEntity();
         Authentication u = SecurityContextHolder.getContext().getAuthentication();
         UserProfile userProfile = userProfiles.findFirstByUsername(u.getName());
         userProfiles.save(userProfile);
         return rootSerializer.serializeOne(
-                "/userProfiles" + userProfile1.getId(),
+                "/user-profiles" + userProfile1.getId(),
                 userProfile,
                 userProfileSerializer);
     }
 
     //get Profile
-    @RequestMapping(path = "/userProfiles", method = RequestMethod.GET)
+    @RequestMapping(path = "/user-profiles", method = RequestMethod.GET)
     public HashMap<String, Object> currentUser() {
         Authentication u = SecurityContextHolder.getContext().getAuthentication();
         UserProfile userProfile = userProfiles.findFirstByUsername(u.getName());
         return rootSerializer.serializeOne(
-                "/userProfiles/" + userProfile.getId(),
+                "/user-profiles/" + userProfile.getId(),
                 userProfile,
                 userProfileSerializer);
     }
 
-    @RequestMapping(path = "/userProfiles/upload", method = RequestMethod.POST)
+    @RequestMapping(path = "/user-profiles/upload", method = RequestMethod.POST)
     public HashMap<String, Object> uploadPhoto(@RequestParam("photo") MultipartFile file,
                                                @RequestParam("hometown") String hometown, @RequestParam("homestate") String homestate,
                                                @RequestParam("country") String country,
@@ -112,9 +112,8 @@ public class UserProfileController {
         userProfiles.save(userProfile);
 
         return rootSerializer.serializeOne(
-                "/UserProfiles-photos" +
+                "/user-profiles" +
                  userProfile.getId(), userProfile, userProfileSerializer);
 
     }
 }
-

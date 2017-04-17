@@ -7,5 +7,5 @@ import javax.persistence.*;
 public class Photo {
     @Id
     @GeneratedValue
-    int id;
+    String id;
 }
