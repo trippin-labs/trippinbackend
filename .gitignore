@@ -22,5 +22,5 @@ build/
 nbbuild/
 dist/
 nbdist/
-.nb-gradle/\n**/application-dev.properties
-\n**/application-dev.properties
+.nb-gradle/
+**/application-dev.properties
