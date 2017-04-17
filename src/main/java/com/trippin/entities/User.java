@@ -22,11 +22,7 @@ public class User implements HasId {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @JsonIgnore
-    @Column(nullable = false)
-    private String passwordHash;
-
-    @Transient
+    @Column
     private String password;
 
     public User() {
@@ -35,7 +31,7 @@ public class User implements HasId {
     public User(String email, String username, String password) throws PasswordStorage.CannotPerformOperationException {
         this.email = email;
         this.username = username;
-        this.password = PasswordStorage.createHash(password);  //TODO: ???
+        this.password = password;
     }
 
     @Override
@@ -61,14 +57,6 @@ public class User implements HasId {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public void setPasswordHash() throws PasswordStorage.CannotPerformOperationException {
-        this.passwordHash = PasswordStorage.createHash(this.password);
-    }
-
-    public boolean verifyPassword(String password) throws PasswordStorage.InvalidHashException, PasswordStorage.CannotPerformOperationException {
-        return PasswordStorage.verifyPassword(password, this.passwordHash);
     }
 
     public String getPassword() {
