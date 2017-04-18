@@ -11,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
@@ -83,7 +82,6 @@ public class UserController {
 //    public HashMap<String, Object> logout(@RequestBody RootParser<User> parmUser, HttpServletResponse response) {
 //
 //    }
-
 
 }
 

@@ -1,9 +1,9 @@
 package com.trippin.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "trips")
@@ -18,30 +18,24 @@ public class Trip implements HasId {
     @Column(nullable = false)
     private String tripName;
 
-//    @Transient
-//    List<User> travelGroup;
-
     @Column(nullable = false)
     String location;
 
-//    @Column
-//    String date;
-//
-//    @Column
-//    String details;
+    @ManyToOne
+    private User user;
 
-    //todo: how to store photo(s) of trip.
+    @Column
+    @JsonProperty("photo-url")
+    String photoUrl;
+
 
     public Trip() {
     }
 
-    public Trip(String tripName, String location) {
+    public Trip(String tripName, String location, String photoUrl) {
         this.tripName = tripName;
         this.location = location;
-    }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
+        this.photoUrl = photoUrl;
     }
 
     public String getTripName() {
@@ -69,5 +63,19 @@ public class Trip implements HasId {
         this.id = id;
     }
 
+    public User getUser() {
+        return user;
+    }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
 }

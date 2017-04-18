@@ -1,11 +1,11 @@
 package com.trippin.entities;
 
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+
 
 public class UsersTrips {
 
@@ -18,8 +18,11 @@ public class UsersTrips {
     private User user;
 
     @ManyToOne
-    @JsonProperty("logged-trip")
+    @JsonProperty("trip")
     private Trip trip;
+
+
+
 
     public UsersTrips() {
     }

@@ -1,14 +1,13 @@
 package com.trippin.controllers;
 
-
+import com.trippin.entities.User;
 import com.trippin.entities.UserProfile;
-import com.trippin.entities.UserProfilePhoto;
 import com.trippin.parsers.RootParser;
 import com.trippin.serializers.RootSerializer;
 import com.trippin.serializers.UserProfileSerializer;
 
-import com.trippin.services.UserProfilePhotoRepository;
 import com.trippin.services.UserProfileRepository;
+import com.trippin.services.UserRepository;
 import com.trippin.utilities.PasswordStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +31,7 @@ public class UserProfileController {
     UserProfileRepository userProfiles;
 
     @Autowired
-    UserProfilePhotoRepository photos;
+    UserRepository users;
 
     @Value("${cloud.aws.s3.bucket}")
     String bucket;
@@ -48,14 +47,15 @@ public class UserProfileController {
     RootSerializer rootSerializer;
     UserProfileSerializer userProfileSerializer;
 
-    //todo: add profile photo
+
     @PostConstruct
     public void init() throws PasswordStorage.CannotPerformOperationException {
         if (userProfiles.count() == 0) {
 
             UserProfile userProfile = new UserProfile();
 
-            userProfile.setUsername("sampleuser123");
+            User user = users.findFirstByUsername("johndoe123");
+            userProfile.setUser(user);
             userProfile.setHometown("hometown");
             userProfile.setHomestate("homestate");
             userProfile.setCountry("country");
@@ -65,56 +65,58 @@ public class UserProfileController {
         }
     }
 
-    //create Profile
-    @RequestMapping(path = "/userProfiles", method = RequestMethod.POST)
-    public HashMap<String, Object> createProfile(@RequestBody RootParser<UserProfile> parser, HttpServletResponse response) throws Exception {
-        UserProfile userProfile1 = parser.getData().getEntity();
-        Authentication u = SecurityContextHolder.getContext().getAuthentication();
-        UserProfile userProfile = userProfiles.findFirstByUsername(u.getName());
-        userProfiles.save(userProfile);
-        return rootSerializer.serializeOne(
-                "/userProfiles" + userProfile1.getId(),
-                userProfile,
-                userProfileSerializer);
-    }
-
     //get Profile
     @RequestMapping(path = "/userProfiles", method = RequestMethod.GET)
     public HashMap<String, Object> currentUser() {
         Authentication u = SecurityContextHolder.getContext().getAuthentication();
-        UserProfile userProfile = userProfiles.findFirstByUsername(u.getName());
+        User user = users.findFirstByUsername(u.getName());
+        UserProfile userProfile = userProfiles.findFirstByUser(user);
+
         return rootSerializer.serializeOne(
                 "/userProfiles/" + userProfile.getId(),
                 userProfile,
                 userProfileSerializer);
     }
 
-    @RequestMapping(path = "/userProfiles/upload", method = RequestMethod.POST)
-    public HashMap<String, Object> uploadPhoto(@RequestParam("photo") MultipartFile file,
-                                               @RequestParam("hometown") String hometown, @RequestParam("homestate") String homestate,
-                                               @RequestParam("country") String country,
-                                               @RequestParam("bio") String bio) throws Exception {
-        //creating a new PhotoPost Entity
+    @RequestMapping(path = "/userProfiles/edit", method = RequestMethod.POST)
+    public HashMap<String, Object> createUserProfile(@RequestParam("photo-url") MultipartFile file,
+                                                     @RequestParam("hometown") String hometown,
+                                                     @RequestParam("homestate") String homestate,
+                                                     @RequestParam("country") String country,
+                                                     @RequestParam("bio") String bio) throws Exception {
+        Authentication u = SecurityContextHolder.getContext().getAuthentication();
+        User user = users.findFirstByUsername(u.getName());
+
         UserProfile userProfile = new UserProfile();
 
         userProfile.setHometown(hometown);
         userProfile.setHomestate(homestate);
         userProfile.setCountry(country);
         userProfile.setBio(bio);
+        userProfile.setUser(user);
 
-        userProfile.setPhotoUrl("https://s3.amazonaws.com/" + bucket + "/" + file.getOriginalFilename());
+        if (file != null) {
 
-        PutObjectRequest s3Req = new PutObjectRequest(bucket, file.getOriginalFilename(), file.getInputStream(),
-                new ObjectMetadata());
+            userProfile.setPhotoUrl("https://s3.amazonaws.com/" + bucket + "/" + file.getOriginalFilename());
 
-        s3.putObject(s3Req);
+            PutObjectRequest s3Req = new PutObjectRequest(bucket, file.getOriginalFilename(), file.getInputStream(),
+                    new ObjectMetadata());
+
+            s3.putObject(s3Req);
+
+        } else {
+            userProfile.setPhotoUrl("http://bit.ly/1McvBcY");
+        }
 
         userProfiles.save(userProfile);
 
         return rootSerializer.serializeOne(
-                "/UserProfiles-photos" +
-                 userProfile.getId(), userProfile, userProfileSerializer);
+                "/UserProfiles-edit" +
+                        userProfile.getId(), userProfile, userProfileSerializer);
 
     }
+
+    //todo: create get userProfile route
+    //display users profile
 }
 

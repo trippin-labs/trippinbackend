@@ -15,11 +15,12 @@ public class UserProfileSerializer extends JsonDataSerializer {
         Map<String, Object> result = new HashMap<>();
         UserProfile userProfile = (UserProfile) entity;
 
-        result.put("username", userProfile.getUsername());
+        result.put("user", userProfile.getUser());
         result.put("hometown", userProfile.getHometown());
         result.put("homestate", userProfile.getHomestate());
         result.put("country", userProfile.getCountry());
         result.put("bio", userProfile.getBio());
+        result.put("photo-url", userProfile.getPhotoUrl());
 
         return result;
     }

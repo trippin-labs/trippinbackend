@@ -6,7 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "photos")
+@Table(name = "userProfiles")
 public class UserProfile implements HasId {
     private static final long serialVersionUID = 1L;
 
@@ -15,8 +15,8 @@ public class UserProfile implements HasId {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     String id;
 
-    @Column
-    private String username;
+    @OneToOne
+    private User user;
 
     @Column
     public String hometown;
@@ -31,13 +31,12 @@ public class UserProfile implements HasId {
     public String bio;
 
     @Column
-    @JsonProperty("photo'url")
+    @JsonProperty("photo-url")
     String photoUrl;
 
 
-
-    public UserProfile(String username, String hometown, String homestate, String country, String bio, String photoUrl) {
-        this.username = username;
+    public UserProfile(User user, String hometown, String homestate, String country, String bio, String photoUrl) {
+        this.user = user;
         this.hometown = hometown;
         this.homestate = homestate;
         this.country = country;
@@ -46,10 +45,6 @@ public class UserProfile implements HasId {
     }
 
     public UserProfile() {
-    }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
     }
 
     public String getPhotoUrl() {
@@ -69,12 +64,12 @@ public class UserProfile implements HasId {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public User getUser() {
+        return user;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getHometown() {

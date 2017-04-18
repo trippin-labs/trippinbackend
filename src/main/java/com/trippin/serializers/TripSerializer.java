@@ -17,6 +17,7 @@ public class TripSerializer extends JsonDataSerializer {
         Trip loggedTrip = (Trip) entity;
 
         result.put("trip-name", loggedTrip.getTripName());
+        result.put("photo-url", loggedTrip.getPhotoUrl());
         result.put("location", loggedTrip.getLocation());
 
         return result;

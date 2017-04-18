@@ -1,6 +1,5 @@
 package com.trippin.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.trippin.utilities.PasswordStorage;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -24,6 +23,7 @@ public class User implements HasId {
 
     @Column
     private String password;
+
 
     public User() {
     }
