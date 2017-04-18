@@ -37,6 +37,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       // Allow registration without being logged in
       .antMatchers(HttpMethod.POST, "/users")
       .permitAll()
+      .antMatchers(HttpMethod.GET, "/trips")
+      .permitAll()
       // Allow login without being logged in
       .antMatchers(HttpMethod.POST, "/login")
       .permitAll()
