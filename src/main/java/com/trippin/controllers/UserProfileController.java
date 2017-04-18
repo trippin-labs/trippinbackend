@@ -66,14 +66,14 @@ public class UserProfileController {
     }
 
     //get Profile
-    @RequestMapping(path = "/userProfiles", method = RequestMethod.GET)
+    @RequestMapping(path = "/user-profiles", method = RequestMethod.GET)
     public HashMap<String, Object> currentUser() {
         Authentication u = SecurityContextHolder.getContext().getAuthentication();
         User user = users.findFirstByUsername(u.getName());
         UserProfile userProfile = userProfiles.findFirstByUser(user);
 
         return rootSerializer.serializeOne(
-                "/userProfiles/" + userProfile.getId(),
+                "/user-profiles/" + userProfile.getId(),
                 userProfile,
                 userProfileSerializer);
     }
@@ -111,12 +111,10 @@ public class UserProfileController {
         userProfiles.save(userProfile);
 
         return rootSerializer.serializeOne(
-                "/UserProfiles-edit" +
-                        userProfile.getId(), userProfile, userProfileSerializer);
-
+                "/user-profiles" +
+                 userProfile.getId(), userProfile, userProfileSerializer);
     }
 
     //todo: create get userProfile route
     //display users profile
 }
-
