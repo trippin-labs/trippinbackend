@@ -2,6 +2,8 @@ package com.trippin.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
+import sun.jvm.hotspot.oops.Array;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 
@@ -28,6 +30,17 @@ public class Trip implements HasId {
     @JsonProperty("photo-url")
     String photoUrl;
 
+    @Column
+    @JsonProperty("photo-urls")
+    ArrayList<String> photoUrls;
+
+    public ArrayList<String> getPhotoUrls() {
+        return photoUrls;
+    }
+
+    public void setPhotoUrls(ArrayList<String> photoUrls) {
+        this.photoUrls = photoUrls;
+    }
 
     public Trip() {
     }

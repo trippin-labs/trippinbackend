@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -69,7 +70,8 @@ public class TripController {
     @RequestMapping(path = "/trips", method = RequestMethod.POST)
     public HashMap<String, Object> createTrip(@RequestParam("name") String tripName,
                                               @RequestParam("location") String location,
-                                              @RequestParam("photo") MultipartFile file) throws Exception {
+                                              @RequestParam("cover-photo") MultipartFile coverPhoto,
+                                              @RequestParam("photos[]") MultipartFile[] otherPhotos) throws Exception {
         Authentication u = SecurityContextHolder.getContext().getAuthentication();
         User user = users.findFirstByUsername(u.getName());
         Trip trip = new Trip();
@@ -78,11 +80,23 @@ public class TripController {
         trip.setTripName(tripName);
         trip.setUser(user);
 
-        trip.setPhotoUrl("https://s3.amazonaws.com/" + bucket + "/" + file.getOriginalFilename());
-        PutObjectRequest s3Req = new PutObjectRequest(bucket, file.getOriginalFilename(), file.getInputStream(),
+        trip.setPhotoUrl("https://s3.amazonaws.com/" + bucket + "/" + coverPhoto.getOriginalFilename());
+        PutObjectRequest s3Req = new PutObjectRequest(bucket, coverPhoto.getOriginalFilename(), coverPhoto.getInputStream(),
                 new ObjectMetadata());
-
         s3.putObject(s3Req);
+
+        ArrayList<String> otherPhotoUrls = new ArrayList<>();
+
+        for (MultipartFile photo : otherPhotos) {
+            otherPhotoUrls.add("https://s3.amazonaws.com/" + bucket + "/" + photo.getOriginalFilename());
+
+            PutObjectRequest s3Req2 = new PutObjectRequest(bucket, photo.getOriginalFilename(), photo.getInputStream(),
+                    new ObjectMetadata());
+            s3.putObject(s3Req2);
+        }
+
+        trip.setPhotoUrls(otherPhotoUrls);
+
 
         try {
             trips.save(trip);
