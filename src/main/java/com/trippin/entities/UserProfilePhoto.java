@@ -15,10 +15,6 @@ public class UserProfilePhoto implements HasId {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     String id;
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
     @Override
     public String getId() {
         return id;

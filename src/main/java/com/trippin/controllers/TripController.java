@@ -3,8 +3,10 @@ package com.trippin.controllers;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.trippin.entities.Photo;
 import com.trippin.entities.Trip;
 import com.trippin.entities.User;
+import com.trippin.parsers.RootParser;
 import com.trippin.serializers.TripSerializer;
 import com.trippin.serializers.RootSerializer;
 import com.trippin.services.TripRepository;
@@ -57,7 +59,6 @@ public class TripController {
     }
 
 
-
     @RequestMapping(path = "/trips", method = RequestMethod.GET)
     public HashMap<String, Object> allTrip() {
         Iterable<Trip> result = trips.findAll();
@@ -81,6 +82,7 @@ public class TripController {
         trip.setUser(user);
 
         trip.setPhotoUrl("https://s3.amazonaws.com/" + bucket + "/" + coverPhoto.getOriginalFilename());
+
         PutObjectRequest s3Req = new PutObjectRequest(bucket, coverPhoto.getOriginalFilename(), coverPhoto.getInputStream(),
                 new ObjectMetadata());
         s3.putObject(s3Req);
@@ -109,7 +111,20 @@ public class TripController {
                 tripSerializer);
     }
 
-    //todo: get trips route
-    //display users trips
+    @RequestMapping(path = "/trips/delete", method = RequestMethod.POST)
+    public void deleteTrip(@RequestBody RootParser<Trip> parmTrip) {
 
+        Trip trip = parmTrip.getData().getEntity();
+        trips.delete(trip);
+    }
+
+    @RequestMapping(path = "/trips/{id)/photos/{id2}", method = RequestMethod.POST)
+    public void deleteTripPhoto(@RequestBody RootParser<String> photoUrl) {
+
+        String photo1 = photoUrl.getData().getEntity();
+
+
+
+
+    }
 }
