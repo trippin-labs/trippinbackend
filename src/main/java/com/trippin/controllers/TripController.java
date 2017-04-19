@@ -3,7 +3,6 @@ package com.trippin.controllers;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.trippin.entities.Photo;
 import com.trippin.entities.Trip;
 import com.trippin.entities.User;
 import com.trippin.parsers.RootParser;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -66,13 +64,17 @@ public class TripController {
         return rootSerializer.serializeMany("/trips", result, tripSerializer);
     }
 
-    //todo: add request params and photo uploading like 'createUserProfile'
+    //also sets pin
     //log a trip
     @RequestMapping(path = "/trips", method = RequestMethod.POST)
     public HashMap<String, Object> createTrip(@RequestParam("name") String tripName,
                                               @RequestParam("location") String location,
                                               @RequestParam("cover-photo") MultipartFile coverPhoto,
-                                              @RequestParam("photos[]") MultipartFile[] otherPhotos) throws Exception {
+                                              @RequestParam("photos[]") MultipartFile[] otherPhotos,
+                                              @RequestParam("lat") Double latitude,
+                                              @RequestParam("lng") Double longitude) throws Exception
+
+    {
         Authentication u = SecurityContextHolder.getContext().getAuthentication();
         User user = users.findFirstByUsername(u.getName());
         Trip trip = new Trip();
@@ -80,6 +82,8 @@ public class TripController {
         trip.setLocation(location);
         trip.setTripName(tripName);
         trip.setUser(user);
+        trip.setLatitude(latitude);
+        trip.setLongitude(longitude);
 
         trip.setPhotoUrl("https://s3.amazonaws.com/" + bucket + "/" + coverPhoto.getOriginalFilename());
 
@@ -111,20 +115,21 @@ public class TripController {
                 tripSerializer);
     }
 
-    @RequestMapping(path = "/trips/delete", method = RequestMethod.POST)
+    @RequestMapping(path = "/trips/{id}", method = RequestMethod.POST)
     public void deleteTrip(@RequestBody RootParser<Trip> parmTrip) {
-
         Trip trip = parmTrip.getData().getEntity();
         trips.delete(trip);
     }
 
-    @RequestMapping(path = "/trips/{id)/photos/{id2}", method = RequestMethod.POST)
-    public void deleteTripPhoto(@RequestBody RootParser<String> photoUrl) {
+    //delete photo
+    @RequestMapping(path = "/trips/{id)/photos", method = RequestMethod.DELETE)
+    public void deleteTripPhoto(@RequestParam String photoUrl, @RequestParam String id) {
 
-        String photo1 = photoUrl.getData().getEntity();
+        //todo: add user auth.
+        Trip trip = trips.findFirstById(id);
+        ArrayList<String> tempList = trip.getPhotoUrls();
 
-
-
+//        String photo1 = photoUrl.getData().getEntity();
 
     }
 }

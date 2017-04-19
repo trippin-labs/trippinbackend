@@ -14,13 +14,14 @@ public class TripSerializer extends JsonDataSerializer {
 
     public Map<String, Object> getAttributes(HasId entity) {
         Map<String, Object> result = new HashMap<>();
-        Trip loggedTrip = (Trip) entity;
+        Trip trip = (Trip) entity;
 
-        result.put("trip-name", loggedTrip.getTripName());
-        result.put("photo-url", loggedTrip.getPhotoUrl());
-        result.put("photo-urls", loggedTrip.getPhotoUrls());
-        result.put("location", loggedTrip.getLocation());
-
+        result.put("trip-name", trip.getTripName());
+        result.put("photo-url", trip.getPhotoUrl());
+        result.put("photo-urls", trip.getPhotoUrls());
+        result.put("location", trip.getLocation());
+        result.put("lat", trip.getLatitude());
+        result.put("lng", trip.getLongitude());
         return result;
     }
 

@@ -2,7 +2,7 @@ package com.trippin.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
-import sun.jvm.hotspot.oops.Array;
+
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -25,6 +25,12 @@ public class Trip implements HasId {
 
     @ManyToOne
     private User user;
+
+    @Column
+    Double latitude;
+
+    @Column
+    Double longitude;
 
     @Column
     @JsonProperty("photo-url")
@@ -90,5 +96,21 @@ public class Trip implements HasId {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 }
