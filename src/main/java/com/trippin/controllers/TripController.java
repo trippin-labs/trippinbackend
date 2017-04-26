@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -115,21 +117,38 @@ public class TripController {
                 tripSerializer);
     }
 
+    //delete trip
     @RequestMapping(path = "/trips/{id}", method = RequestMethod.POST)
-    public void deleteTrip(@RequestBody RootParser<Trip> parmTrip) {
+    public void deleteTrip(@RequestBody RootParser<Trip> parmTrip, @RequestParam String id) {
+
+        Authentication u = SecurityContextHolder.getContext().getAuthentication();
+        User user = users.findFirstByUsername(u.getName());
+
         Trip trip = parmTrip.getData().getEntity();
         trips.delete(trip);
     }
 
     //delete photo
     @RequestMapping(path = "/trips/{id)/photos", method = RequestMethod.DELETE)
-    public void deleteTripPhoto(@RequestParam String photoUrl, @RequestParam String id) {
+    public void deleteTripPhoto(@RequestParam String photoUrl, @RequestParam String id, HttpServletResponse response) throws IOException {
 
         //todo: add user auth.
+
+        Authentication u = SecurityContextHolder.getContext().getAuthentication();
+        User user = users.findFirstByUsername(u.getName());
+
         Trip trip = trips.findFirstById(id);
-        ArrayList<String> tempList = trip.getPhotoUrls();
+        //todo: add 400 series unauthorized.
 
-//        String photo1 = photoUrl.getData().getEntity();
+        if (user == trip.getUser()) {
 
+            ArrayList<String> tempList = trip.getPhotoUrls();
+
+            for (String string : tempList) {
+                if (string == photoUrl) {
+                    tempList.remove(photoUrl);
+                }
+            }
+        } else response.sendError(401, "Unauthorized.");
     }
 }

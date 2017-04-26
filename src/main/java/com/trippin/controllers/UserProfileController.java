@@ -1,11 +1,14 @@
 package com.trippin.controllers;
 
+import com.trippin.entities.Trip;
 import com.trippin.entities.User;
 import com.trippin.entities.UserProfile;
 import com.trippin.parsers.RootParser;
 import com.trippin.serializers.RootSerializer;
+import com.trippin.serializers.TripSerializer;
 import com.trippin.serializers.UserProfileSerializer;
 
+import com.trippin.services.TripRepository;
 import com.trippin.services.UserProfileRepository;
 import com.trippin.services.UserRepository;
 import com.trippin.utilities.PasswordStorage;
@@ -33,20 +36,24 @@ public class UserProfileController {
     @Autowired
     UserRepository users;
 
+    @Autowired
+    TripRepository trips;
+
     @Value("${cloud.aws.s3.bucket}")
     String bucket;
 
     @Autowired
     AmazonS3Client s3;
 
+    RootSerializer rootSerializer;
+    UserProfileSerializer userProfileSerializer;
+    TripSerializer tripSerializer;
+
+
     public UserProfileController() {
         this.rootSerializer = new RootSerializer();
         this.userProfileSerializer = new UserProfileSerializer();
     }
-
-    RootSerializer rootSerializer;
-    UserProfileSerializer userProfileSerializer;
-
 
     @PostConstruct
     public void init() throws PasswordStorage.CannotPerformOperationException {
@@ -115,6 +122,12 @@ public class UserProfileController {
                  userProfile.getId(), userProfile, userProfileSerializer);
     }
 
-    //todo: create get userProfile route
-    //display users profile
+    @RequestMapping(path = "/users/{id}/trips", method = RequestMethod.GET)
+    public HashMap<String, Object> displayUsersTrips(@RequestParam String id) {
+        User user = users.findUserById(id);
+
+        Iterable<Trip> result = (Iterable<Trip>) trips.findAllById(id);
+
+        return rootSerializer.serializeMany("/user-profiles/trips", result, tripSerializer);
+    }
 }

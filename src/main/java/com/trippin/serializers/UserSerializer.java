@@ -2,7 +2,6 @@ package com.trippin.serializers;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import com.trippin.entities.HasId;
 import com.trippin.entities.User;
 
@@ -23,7 +22,9 @@ public class UserSerializer extends JsonDataSerializer {
     }
 
     public Map<String, String> getRelationshipUrls() {
-        return new HashMap<String, String>();
+        return new HashMap<String, String>() {{
+            put("trips", "/users/{id}/trips");
+        }};
 
     }
 }
