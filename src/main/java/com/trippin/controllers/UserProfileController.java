@@ -53,6 +53,7 @@ public class UserProfileController {
     public UserProfileController() {
         this.rootSerializer = new RootSerializer();
         this.userProfileSerializer = new UserProfileSerializer();
+        this.tripSerializer = new TripSerializer();
     }
 
     @PostConstruct
@@ -126,8 +127,6 @@ public class UserProfileController {
     public HashMap<String, Object> displayUsersTrips(@PathVariable String id) {
         User user = users.findOne(id);
 
-        Iterable<Trip> result = user.getTrips();
-
-        return rootSerializer.serializeMany("/user-profiles/trips", result, tripSerializer);
+        return rootSerializer.serializeMany("/users/" + id + "/trips", user.getTrips(), tripSerializer);
     }
 }
