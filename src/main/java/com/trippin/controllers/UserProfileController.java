@@ -124,9 +124,9 @@ public class UserProfileController {
 
     @RequestMapping(path = "/users/{id}/trips", method = RequestMethod.GET)
     public HashMap<String, Object> displayUsersTrips(@RequestParam String id) {
-        User user = users.findUserById(id);
+        User user = users.findOne(id);
 
-        Iterable<Trip> result = (Iterable<Trip>) trips.findAllById(id);
+        Iterable<Trip> result = user.getTrips();
 
         return rootSerializer.serializeMany("/user-profiles/trips", result, tripSerializer);
     }

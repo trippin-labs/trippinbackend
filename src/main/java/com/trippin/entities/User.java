@@ -4,6 +4,7 @@ import com.trippin.utilities.PasswordStorage;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table (name = "users")
@@ -23,6 +24,9 @@ public class User implements HasId {
 
     @Column
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    Set<Trip> trips;
 
 
     public User() {
@@ -65,6 +69,14 @@ public class User implements HasId {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Set<Trip> getTrips() {
+        return trips;
+    }
+
+    public void setTrips(Set<Trip> trips) {
+        this.trips = trips;
     }
 }
 
