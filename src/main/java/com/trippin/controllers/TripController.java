@@ -48,15 +48,15 @@ public class TripController {
     }
 
 
-    @PostConstruct
-    public void init() throws PasswordStorage.CannotPerformOperationException {
-        if (trips.count() == 0) {
-            Trip trip = new Trip();
-            trip.setTripName("Harold's hairy adventure.");
-            trip.setLocation("Bermuda");
-            trips.save(trip);
-        }
-    }
+//    @PostConstruct
+//    public void init() throws PasswordStorage.CannotPerformOperationException {
+//        if (trips.count() == 0) {
+//            Trip trip = new Trip();
+//            trip.setTripName("Harold's hairy adventure.");
+//            trip.setLocation("Bermuda");
+//            trips.save(trip);
+//        }
+//    }
 
 
     @RequestMapping(path = "/trips", method = RequestMethod.GET)
