@@ -123,7 +123,7 @@ public class UserProfileController {
     }
 
     @RequestMapping(path = "/users/{id}/trips", method = RequestMethod.GET)
-    public HashMap<String, Object> displayUsersTrips(@RequestParam String id) {
+    public HashMap<String, Object> displayUsersTrips(@PathVariable String id) {
         User user = users.findOne(id);
 
         Iterable<Trip> result = user.getTrips();
